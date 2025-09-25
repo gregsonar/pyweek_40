@@ -4,10 +4,12 @@ from random import choice
 
 from direct.actor.Actor import Actor
 from direct.gui.OnscreenText import OnscreenText
-from panda3d.core import TextNode
+from panda3d.core import TextNode, look_at
 from ursina import *
 from ursina import Entity, Text, Ursina, camera
 from ursina.prefabs.platformer_controller_2d import PlatformerController2d
+from ursina.lights import PointLight, DirectionalLight, AmbientLight
+from ursina.shaders import lit_with_shadows_shader
 
 from handlers.sfx_handler import Sfx_handler  # todo: импортировать music_handler из pw_38
 from spritesheet_loader import SpritesheetLoader
@@ -222,13 +224,18 @@ class WindowCleanerGame:
         # Освещение
         # https://docs.panda3d.org/1.10/python/programming/render-attributes/lighting
         self.light_source = PointLight(
-            position=(0, 1, -2),
+            position=(0, 1, -30),
             parent=camera,
-            color=color.rgba(1, 1, 1, 0.9),
-            shadows=False
+            color=color.rgba(1, 1, 1, 1.0),
+            shadows=False,
         )
 
-        self.light_source.rotation = (0, -90, 0)
+        # self.light_source.rotation = (0, 0, 0)\
+
+        self.directional_light = DirectionalLight(shadows=True)
+        self.directional_light.update_bounds(self.player)
+        self.directional_light.look_at(self.player)
+
 
     def setup_player(self):
         """Создание игрока и люльки"""
@@ -437,6 +444,7 @@ class WindowCleanerGame:
         """Основной цикл обновления"""
         self.update_cradle_movement() # Обновляем движение люльки
         self.player.current_target_window = self.find_nearest_dirty_window() # Обновляем цель игрока
+        self.light_source.look_at(self.player)
         self.update_ui() # Обновляем UI
 
 
@@ -445,6 +453,7 @@ class WindowCleanerGame:
 # Инициализация Ursina
 icon_path = 'assets/knotty_kaa_32_favicon.ico'  # todo: разобраться, почему не загружает иконку
 app = Ursina(title='PyWeek 40 - Game by Knotty Kaa', icon=icon_path)
+Entity.default_shader = lit_with_shadows_shader
 window.borderless = False
 window.fullscreen = False
 window.exit_button.visible = False
