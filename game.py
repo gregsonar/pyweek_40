@@ -128,11 +128,19 @@ class WindowCleanerPlayer(PlatformerController2d):
 class Window(Entity):
     """Простое окно для мытья"""
     # todo: загружать спрайты для окон
-    def __init__(self, floor_index, window_index, **kwargs):
+    def __init__(self, floor_index, window_index, parent, **kwargs):
+        # Этаж (стена здания)
+        windows_sprites_data = parent.texture_docs["frames"]['Test_Scene_1 (Glass T1).aseprite']['frame']
+        windows_texture = parent.textures.get_sprite(windows_sprites_data['x'], windows_sprites_data['y'],
+                                                     windows_sprites_data['w'], windows_sprites_data['h'])
+        # windows_texture = parent.textures.get_sprite(0, 247, 32, 32)
+
         super().__init__(
             model="quad",
             scale=(1, 1),
             collider='box',
+            texture=windows_texture,
+            parent=parent,
             **kwargs
         )
         self.floor_index = floor_index
@@ -225,7 +233,7 @@ class WindowCleanerGame:
     def setup_player(self):
         """Создание игрока и люльки"""
         # Контейнер люльки - всё что движется вместе с игроком
-        self.cradle_container = Entity(name="cradle_system")
+        self.cradle_container = Entity(name="cradle_system", textures=self.textures, texture_docs=self.texture_docs)
 
         # Игрок
         self.player = WindowCleanerPlayer()
@@ -277,7 +285,7 @@ class WindowCleanerGame:
     def setup_building(self):
         """Создание системы здания"""
         # Контейнер здания - всё что статично относительно здания
-        self.building_container = Entity(name="building_system")
+        self.building_container = Entity(name="building_system", textures=self.textures, texture_docs=self.texture_docs)
 
     def setup_ui(self):
         """Настройка пользовательского интерфейса"""
