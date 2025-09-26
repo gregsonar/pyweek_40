@@ -189,8 +189,8 @@ class WindowCleanerGame:
             doc = json.load(file)
         self.texture_docs = doc # aseprite умеет генерить json с данными о спрайтах, используем его
 
+        self.player = self.setup_player()
         self.setup_scene()
-        self.setup_player()
         self.setup_building()
         self.setup_ui()
 
@@ -273,7 +273,7 @@ class WindowCleanerGame:
         # Невидимая земля для коллизий (не факт, что действительно надо)
         self.cradle_ground = Entity(
             model='cube',
-            color=color.hsv(0, 0, 1, .3),  # для тестов делаем землю чуточку видимой
+            color=color.hsv(0, 0, 1, .0),  # для тестов делаем землю чуточку видимой
             y=-1,
             scale=(15, 1, 3),
             collider='box',
@@ -296,6 +296,7 @@ class WindowCleanerGame:
         camera.add_script(SmoothFollow(target=self.player, offset=[0, 3, -35], speed=1))
         # ИЛИ камера следует за люлькой
         # camera.add_script(SmoothFollow(target=self.cradle_container, offset=[0, 4, -30], speed=3))
+        return self.player
 
     def setup_building(self):
         """Создание системы здания"""
@@ -334,6 +335,7 @@ class WindowCleanerGame:
             z=2,
             color=color.brown,
             texture=wall_texture,
+            texture_scale=(2, 1),
             parent=self.building_container,
             shadows=True
         )
@@ -412,18 +414,19 @@ class WindowCleanerGame:
     def update_cradle_movement(self):
         """Обновляет движение люльки"""
         if self.is_lifting:
-            # Поднимаем люльку (опускаем здание)
+            # Поднимаем люльку вверх (опускаем здание вниз)
             lift_distance = self.lift_speed * time.dt
             self.building_container.y -= lift_distance
 
             # Проверяем, достигли ли нужной высоты
-            target_y = -self.current_floor_index * 4
+            target_y = -self.current_floor_index * 4  # todo: закрепить высоту этажа
             if self.building_container.y <= target_y:
                 self.building_container.y = target_y
                 self.is_lifting = False
         else:
             # Ждем на этаже
             if self.all_current_floor_clean():
+                # todo: add message with congratulations
                 self.move_to_next_floor()
             else:
                 self.current_wait_time += time.dt
@@ -483,8 +486,9 @@ window.exit_button.visible = False
 window.fps_counter.enabled = True
 
 # Земля для физики
-ground = Entity(model='cube', color=color.black, z=-.1, y=-1, origin_y=.5, scale=(1000, 100, 10), collider='box',
+ground = Entity(model='cube', z=-.1, y=-1, origin_y=.5, scale=(1000, 100, 10), collider='box',
                 ignore=True)
+ground.color = color.rgba(0.7, 0.7, 0.8, 0.1)  # земля прозрачная, чтобы видеть этажи ниже
 
 
 def main_input(key):
