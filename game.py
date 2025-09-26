@@ -181,7 +181,8 @@ class WindowCleanerGame:
     def __init__(self):
         # загружаем спрайтшит и JSON с координатами из Aseprite
         textures_dir_path = pathlib.PurePath('assets','textures')
-        spritesheet_filename = 'Test_Scene_1_trimmed_spritesheet'
+        # spritesheet_filename = 'Test_Scene_1_trimmed_spritesheet'
+        spritesheet_filename = 'Test_Spritesheet_1'
 
         self.textures = SpritesheetLoader(pathlib.PurePath(textures_dir_path, spritesheet_filename + '.png'))
         with open(pathlib.PurePath(textures_dir_path, spritesheet_filename + '.json')) as file:
@@ -319,8 +320,12 @@ class WindowCleanerGame:
         floor_y = floor_index * 4  # Каждый этаж на 4 единицы выше
 
         # Этаж (стена здания)
-        wall_data = self.texture_docs["frames"]['Test_Scene_1 (Layer 1).aseprite']['frame']
-        wall_texture = self.textures.get_sprite(wall_data['x'], wall_data['y'], wall_data['w'], wall_data['h'])
+        wall_data = self.texture_docs["frames"]['Test_Spritesheet_1 (Wall 1).aseprite']['frame']
+        wall_texture = self.textures.get_sprite(wall_data['x'], wall_data['y'], wall_data['w'], wall_data['h']/2)
+
+        misc_meta = [e['name'] for e in self.texture_docs["meta"]["layers"] if e.get("group") == "Misc"]
+        misc_objects = [self.texture_docs["frames"][f'Test_Spritesheet_1 ({name}).aseprite']['frame'] for name in misc_meta]
+        # misc_data = self.texture_docs["frames"]['Test_Spritesheet_1 (Wall 1).aseprite']['frame']
 
         floor_entity = Entity(
             model="quad",
