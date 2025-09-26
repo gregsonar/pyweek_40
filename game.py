@@ -1,6 +1,6 @@
 import json
 import pathlib
-from random import choice
+import random
 
 from direct.actor.Actor import Actor
 from direct.gui.OnscreenText import OnscreenText
@@ -132,15 +132,17 @@ class Window(Entity):
     """Простое окно для мытья"""
     # todo: загружать спрайты для окон
     def __init__(self, floor_index, window_index, parent, **kwargs):
-        # Этаж (стена здания)
-        windows_sprites_data = parent.texture_docs["frames"]['Test_Scene_1 (Glass T1).aseprite']['frame']
+        # спрайт окна
+        windows = ['Test_Spritesheet_1 (Glass t1).aseprite', 'Test_Spritesheet_1 (Glass t2).aseprite', 'Test_Spritesheet_1 (Glass t3).aseprite']
+        current_variant = random.choice(windows)
+        windows_sprites_data = parent.texture_docs["frames"][current_variant]['frame']
         windows_texture = parent.textures.get_sprite(windows_sprites_data['x'], windows_sprites_data['y'],
                                                      windows_sprites_data['w'], windows_sprites_data['h'])
         # windows_texture = parent.textures.get_sprite(0, 247, 32, 32)
 
         super().__init__(
             model="quad",
-            scale=(1, 1),
+            scale=(1.5, 1.5),
             collider='box',
             texture=windows_texture,
             parent=parent,
@@ -148,7 +150,7 @@ class Window(Entity):
         )
         self.floor_index = floor_index
         self.window_index = window_index
-        self.is_dirty = True
+        self.is_dirty = True  # окно по-умолчанию грязное, если не доказано обратное
         self.is_cleaning = False
         self.name = f"window_{floor_index}_{window_index}"
 
