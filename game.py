@@ -54,7 +54,7 @@ class WindowCleanerPlayer(PlatformerController2d):
             # Пробуем помыть окно
             self.to_y_angle = 180  # todo: дорабоать подробнее
             work_animations = ['Victory', 'Punch', 'SwordSlash']  # названия анимаций жестко записаны в .gltf модели
-            self.newanim = choice(work_animations)
+            self.newanim = random.choice(work_animations)
             self.try_clean_window()
 
         if key == 'space':
@@ -66,7 +66,7 @@ class WindowCleanerPlayer(PlatformerController2d):
             self.newanim = 'Idle'
             self.to_y_angle = 0
             self.movepressed = 0
-            self.move_locked = True
+            # self.move_locked = True
 
         if key == 'd' and not self.move_locked:
             self.velocity = .5
@@ -90,6 +90,9 @@ class WindowCleanerPlayer(PlatformerController2d):
         if self.movepressed <= 0:
             self.velocity = 0
 
+        if self.movepressed < 0:
+            self.movepressed = 0
+
     def try_clean_window(self):
         """Попытка помыть окно"""
         if self.current_target_window and self.current_target_window.is_dirty:
@@ -111,6 +114,7 @@ class WindowCleanerPlayer(PlatformerController2d):
             if self.grounded:
                 self.move_locked = False
                 if held_keys['a'] or held_keys['d']:
+                    self.currentanim = 'Walk'
                     self.newanim = 'Walk'
                 else:
                     self.newanim = 'Idle'
