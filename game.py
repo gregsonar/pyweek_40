@@ -264,11 +264,40 @@ class WindowCleanerGame:
         # todo: загружать спрайты для люльки
         self.cradle_platform = Entity(
             model="cube",
-            scale=(4, 0.3, 1.5),
+            scale=(12, 0.3, 1.5),
             color=color.orange,
             y=-0.6,
             parent=self.cradle_container
         )
+        self.cradle_left = Entity(
+            model="cube",
+            scale=(0.3, 2.5, 1.5),
+            color=color.orange,
+            # y=-0.6,
+            x=-6,
+            collider='box',
+            parent=self.cradle_container
+        )
+        self.cradle_right = Entity(
+            model="cube",
+            scale=(0.3, 2.5, 1.5),
+            color=color.orange,
+#             y=-0.6,
+            x=6,
+            collider='box',
+            parent=self.cradle_container
+        )
+
+        # Тросы (пока не надо)
+        for i in [-1, 1]:  # Два троса по бокам
+            rope = Entity(
+                model="cube",
+                scale=(0.1, 15, 0.1),
+                color=color.brown,
+                x=i * 6,
+                y=7,
+                parent=self.cradle_container
+            )
 
         # Невидимая земля для коллизий (не факт, что действительно надо)
         self.cradle_ground = Entity(
@@ -279,18 +308,6 @@ class WindowCleanerGame:
             collider='box',
             parent=self.cradle_container
         )
-
-        # # Тросы (пока не надо)
-        # for i in [-1, 1]:  # Два троса по бокам
-        #     rope = Entity(
-        #         model="cube",
-        #         scale=(0.1, 15, 0.1),
-        #         color=color.brown,
-        #         x=i * 1.5,
-        #         y=7,
-        #         parent=self.cradle_container
-        #     )
-
 
         # Камера плавно катается за игроком
         camera.add_script(SmoothFollow(target=self.player, offset=[0, 3, -35], speed=1))
