@@ -19,7 +19,7 @@ class SpritesheetLoader:
         self.temp_dir = Path("temp")
         self.temp_dir.mkdir(exist_ok=True)
 
-    def get_sprite(self, x, y, width, height, name=None):
+    def get_sprite(self, x, y, w, h, name=None):
         """
         Вырезает спрайт из спрайтшита
 
@@ -32,7 +32,7 @@ class SpritesheetLoader:
             Texture: Готовая текстура для Ursina
         """
         # Проверяем кеш в памяти
-        cache_key = name or f"{x}_{y}_{width}_{height}"
+        cache_key = name or f"{x}_{y}_{w}_{h}"
         if cache_key in self.textures:
             return self.textures[cache_key]
 
@@ -46,7 +46,7 @@ class SpritesheetLoader:
             texture = load_texture(str(temp_path))
         else:
             # Создаем новый спрайт
-            sprite = self.spritesheet.crop((x, y, x + width, y + height))
+            sprite = self.spritesheet.crop((x, y, x + w, y + h))
             sprite.save(temp_path)
             texture = load_texture(str(temp_path))
 
