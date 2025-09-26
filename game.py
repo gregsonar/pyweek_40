@@ -366,10 +366,24 @@ class WindowCleanerGame:
                 floor_index=floor_index,
                 window_index=i,
                 x=window_x,
-                y=floor_y + 0.5,
+                y=floor_y + random.uniform(0.3, 1.5),
                 z=1,
                 parent=self.building_container
             )
+            if i < window_count-1:
+                if random.uniform(0, 1) > 0.9:
+                    current_object = random.choice(misc_objects)
+                    current_object_texture = self.textures.get_sprite(**current_object)
+                    misc_entity = Entity(
+                        model="quad",
+                        scale=(1, 1),
+                        y=floor_y + random.uniform(0.3, 1.5),
+                        x=window_x + 2,
+                        z=1,
+                        # color=color.brown,
+                        texture=current_object_texture,
+                        parent=self.building_container
+                    )
             self.all_windows.append(window)
 
     def get_current_floor_windows(self):
