@@ -15,6 +15,7 @@ from handlers.sfx_handler import Sfx_handler  # todo: импортировать
 from spritesheet_loader import SpritesheetLoader
 
 DEBUG_MODE = True  # Отключить перед сборкой
+PRESSED_KEYS = False
 
 
 class WindowCleanerPlayer(PlatformerController2d):
@@ -417,6 +418,7 @@ class WindowCleanerGame:
 
     def update_ui(self):
         """Обновляет интерфейс"""
+        global PRESSED_KEYS
         current_floor_windows = self.get_current_floor_windows()
         dirty_count = len(current_floor_windows)
         # if DEBUG_MODE:
@@ -436,9 +438,14 @@ class WindowCleanerGame:
                                    f'\nHeld keys: {list(held_keys)}'
                                    f'\nmovepressed: {self.player.movepressed}')
 
-        res = dict(filter(lambda item: not (isinstance(item[1], int) and item[1] <= 0), held_keys.items()))
-        if res:
-            print(res)
+            res = dict(filter(lambda item: not (isinstance(item[1], int) and item[1] <= 0), held_keys.items()))
+            if res:
+                if PRESSED_KEYS:
+                    if PRESSED_KEYS != res:
+                        print(res)
+                        PRESSED_KEYS = res
+                else:
+                    PRESSED_KEYS = res
 
     def update(self):
         """Основной цикл обновления"""
