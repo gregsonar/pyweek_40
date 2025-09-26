@@ -194,7 +194,7 @@ class WindowCleanerGame:
         self.setup_ui()
 
         # Игровые параметры
-        self.current_level = 1
+        self.current_game_level = 1
         self.score = 0
         self.lift_speed = 0.8  # скорость подъема люльки
 
@@ -435,13 +435,13 @@ class WindowCleanerGame:
         #     print(f'DIRTY COUNT: {dirty_count}')
 
         if self.is_lifting:
-            self.hud_text.text = f'Уровень {self.current_level} | Поднимаемся на этаж {self.current_floor_index + 1}...'
+            self.hud_text.text = f'Уровень {self.current_game_level} | Поднимаемся на этаж {self.current_floor_index + 1}...'
         else:
             time_left = max(0, self.cradle_wait_time - self.current_wait_time)
             if self.player.current_target_window:
-                self.hud_text.text = f'Уровень {self.current_level} | Этаж {self.current_floor_index + 1} | Окон: {dirty_count} | Время: {time_left:.1f}с | [E] - мыть!'
+                self.hud_text.text = f'Уровень {self.current_game_level} | Этаж {self.current_floor_index + 1} | Окон: {dirty_count} | Время: {time_left:.1f}с | [E] - мыть!'
             else:
-                self.hud_text.text = f'Уровень {self.current_level} | Этаж {self.current_floor_index + 1} | Окон: {dirty_count} | Время: {time_left:.1f}с | Подойдите к окну'
+                self.hud_text.text = f'Уровень {self.current_game_level} | Этаж {self.current_floor_index + 1} | Окон: {dirty_count} | Время: {time_left:.1f}с | Подойдите к окну'
 
         if DEBUG_MODE:
             self.hud_text.text += (f'\nGrounded: {self.player.grounded}, Vel.:{self.player.velocity}, current_anim: {self.player.currentanim}, new:{self.player.newanim}, Move locked: {self.player.move_locked}'
