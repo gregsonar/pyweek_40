@@ -97,10 +97,10 @@ class WindowCleanerPlayer(PlatformerController2d):
         """Попытка помыть окно"""
         if self.current_target_window and self.current_target_window.is_dirty:
             # Простая проверка расстояния
-            distance = distance_2d(self.position, self.current_target_window.position)
-            if distance <= self.cleaning_range:
-                self.current_target_window.start_cleaning()
-                return True
+            # distance = distance_2d(self.position, self.current_target_window.position)
+            # if distance <= self.cleaning_range:
+            self.current_target_window.start_cleaning()
+            return True
         return False
 
     def update(self):
@@ -375,13 +375,17 @@ class WindowCleanerGame:
         nearest_window = None
         min_distance = float('inf')
 
+        floor_factor = self.current_floor_index * 4
         for window in current_floor_windows:
-            dist = distance_2d(self.player.position, window.position)
+            dist = distance_2d(self.player.position, window.position) - floor_factor
             if dist < min_distance:
                 min_distance = dist
                 nearest_window = window
 
-        return nearest_window if min_distance <= self.player.cleaning_range else None
+        if min_distance <= self.player.cleaning_range:
+            return nearest_window
+        return None
+        # return nearest_window if min_distance <= self.player.cleaning_range else None
 
     def all_current_floor_clean(self):
         """Проверяет, все ли окна на текущем этаже чистые"""
@@ -457,6 +461,7 @@ class WindowCleanerGame:
         """Основной цикл обновления"""
         self.update_cradle_movement() # Обновляем движение люльки
         self.player.current_target_window = self.find_nearest_dirty_window() # Обновляем цель игрока
+        print(self.player.current_target_window)
         self.light_source.look_at(self.player)
         self.update_ui() # Обновляем UI
 
