@@ -237,16 +237,21 @@ class WindowCleanerGame:
         self.light_source = AmbientLight(
             position=(0, 1, 0),
             parent=camera,
-            color=color.rgba(1, 1, 1, .5),
+            color=color.rgba(1, 1, 1, .9),
             shadows=True,
         )
 
-        shadow_bounds_box = Entity(model='cube', scale=15, visible=0)
+        shadow_bounds_box = Entity(model='wireframe_cube', scale=15, visible=0)
 
         self.directional_light = DirectionalLight(shadows=True)
         self.directional_light.update_bounds(shadow_bounds_box)
-        # self.directional_light.look_at(Vec3(30, 0, 1))
-        self.directional_light.look_at(self.player)
+        self.directional_light.y = 2
+        self.directional_light.z = -8
+        # self.directional_light.look_at(Vec3(5, 0))
+
+        # light_marker = Entity(model="sphere")
+        # light_marker.position = self.directional_light.position
+        # self.directional_light.look_at(self.player)
 
 
     def setup_player(self):
@@ -512,7 +517,7 @@ window.fps_counter.enabled = True
 # Земля для физики
 ground = Entity(model='cube', z=-.1, y=-1, origin_y=.5, scale=(1000, 100, 10), collider='box',
                 ignore=True)
-ground.color = color.rgba(0.7, 0.7, 0.8, 0.1)  # земля прозрачная, чтобы видеть этажи ниже
+ground.color = color.rgba(0.7, 0.7, 0.8, 0.0)  # земля прозрачная, чтобы видеть этажи ниже
 
 
 def main_input(key):
