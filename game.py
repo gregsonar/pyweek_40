@@ -7,7 +7,7 @@ from direct.gui.OnscreenText import OnscreenText
 from panda3d.core import TextNode, look_at
 from ursina import *
 from ursina import Entity, Text, Ursina, camera
-from ursina.prefabs.platformer_controller_2d import PlatformerController2d
+from custom_2d_controller import Custom2dController
 from ursina.lights import PointLight, DirectionalLight, AmbientLight
 from ursina.shaders import lit_with_shadows_shader
 
@@ -18,7 +18,7 @@ DEBUG_MODE = True  # Отключить перед сборкой
 PRESSED_KEYS = False
 
 
-class WindowCleanerPlayer(PlatformerController2d):
+class WindowCleanerPlayer(Custom2dController):
     """Расширенный контроллер для мойщика окон - унаследован от заготовки 2d актора для платформеров в Урсине"""
 
     def __init__(self, **kwargs):
