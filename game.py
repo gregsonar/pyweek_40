@@ -221,27 +221,31 @@ class WindowCleanerGame:
         camera.fov = 12
 
         # Фон неба
+        if DEBUG_MODE:
+            skyline_texture = str(pathlib.Path('temp', 'city17_skyline.jpg'))
         self.background = Entity(
             model="quad",
             scale=(25, 20),
             color=color.light_gray,
+            texture=skyline_texture,
             z=15,
             y=10
         )
 
         # Освещение
         # https://docs.panda3d.org/1.10/python/programming/render-attributes/lighting
-        self.light_source = PointLight(
-            position=(0, 1, -30),
+        self.light_source = AmbientLight(
+            position=(0, 1, 0),
             parent=camera,
-            color=color.rgba(1, 1, 1, 1.0),
-            shadows=False,
+            color=color.rgba(1, 1, 1, .5),
+            shadows=True,
         )
 
-        # self.light_source.rotation = (0, 0, 0)\
+        shadow_bounds_box = Entity(model='cube', scale=15, visible=0)
 
         self.directional_light = DirectionalLight(shadows=True)
-        self.directional_light.update_bounds(self.player)
+        self.directional_light.update_bounds(shadow_bounds_box)
+        # self.directional_light.look_at(Vec3(30, 0, 1))
         self.directional_light.look_at(self.player)
 
 
@@ -254,11 +258,12 @@ class WindowCleanerGame:
         self.player = WindowCleanerPlayer()
         self.player.max_jumps = 1
         self.player.scale = 1
-        # self.player.model = Actor(models="models/Ninja_Sand_Female2.gltf")
-        self.player.model = Actor(models="models/Ninja_Male_Hair.gltf")
-        self.player.color = color.white
+        self.player.model = Actor("models/Ninja_Sand_Female2.gltf")
+        # self.player.color = None
+        self.player.texture = None
+        self.player.default_shader = None
 
-        self.player.parent = self.cradle_container
+        # self.player.parent = self.cradle_container
 
         # Люлька (платформа под игроком)
         # todo: загружать спрайты для люльки
@@ -390,23 +395,12 @@ class WindowCleanerGame:
         """Получает окна текущего этажа"""
         windows_list = [w for w in self.all_windows
          if w.floor_index == self.current_floor_index and w.is_dirty]
-
-        # if DEBUG_MODE:
-        #     print(f'[get_current_floor_windows] {windows_list}')
-
         return windows_list
 
     def find_nearest_dirty_window(self):
         """Находит ближайшее грязное окно"""
         # todo: выбирать только грязные окна
         current_floor_windows = self.get_current_floor_windows()
-
-        # if DEBUG_MODE:
-        #     if current_floor_windows:
-        #         print(f"[find_nearest_dirty_window] {current_floor_windows[0].position}")
-        #     else:
-        #         print(f"[find_nearest_dirty_window] None")
-
         if not current_floor_windows:
             return None
 
@@ -500,8 +494,7 @@ class WindowCleanerGame:
         """Основной цикл обновления"""
         self.update_cradle_movement() # Обновляем движение люльки
         self.player.current_target_window = self.find_nearest_dirty_window() # Обновляем цель игрока
-        print(self.player.current_target_window)
-        self.light_source.look_at(self.player)
+        # self.light_source.look_at(self.player)
         self.update_ui() # Обновляем UI
 
 
@@ -510,7 +503,7 @@ class WindowCleanerGame:
 # Инициализация Ursina
 icon_path = 'assets/knotty_kaa_32_favicon.ico'  # todo: разобраться, почему не загружает иконку
 app = Ursina(title='PyWeek 40 - Game by Knotty Kaa', icon=icon_path)
-Entity.default_shader = lit_with_shadows_shader
+# Entity.default_shader = lit_with_shadows_shader
 window.borderless = False
 window.fullscreen = False
 window.exit_button.visible = False
@@ -536,7 +529,6 @@ game = WindowCleanerGame()
 # Обработчики ввода
 debug_handler = Entity(input=main_input)
 editor_camera = EditorCamera(enabled=False, ignore_paused=True)
-
 
 # Основной цикл
 def update():
