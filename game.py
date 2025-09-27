@@ -17,6 +17,15 @@ from spritesheet_loader import SpritesheetLoader
 DEBUG_MODE = True  # Отключить перед сборкой
 PRESSED_KEYS = False
 
+def crossfade_sky(day, night):
+    print(day.alpha)
+    if day.alpha >= 1:
+        day.animate('alpha', 0, duration=5, curve=curve.linear)
+        night.animate('alpha', 1, duration=5, curve=curve.linear)
+    else:
+        day.animate('alpha', 1, duration=5, curve=curve.linear)
+        night.animate('alpha', 0, duration=5, curve=curve.linear)
+    invoke(crossfade_sky, day=day, night=night, delay=15)
 
 class WindowCleanerPlayer(Custom2dController):
     """Расширенный контроллер для мойщика окон - унаследован от заготовки 2d актора для платформеров в Урсине"""
@@ -134,7 +143,6 @@ class WindowCleanerPlayer(Custom2dController):
 
 class Window(Entity):
     """Простое окно для мытья"""
-    # todo: загружать спрайты для окон
     def __init__(self, floor_index, window_index, parent, **kwargs):
         # спрайт окна
         windows = ['Test_Spritesheet_1 (Glass t1).aseprite', 'Test_Spritesheet_1 (Glass t2).aseprite', 'Test_Spritesheet_1 (Glass t3).aseprite']
@@ -193,6 +201,7 @@ class WindowCleanerGame:
         self.setup_scene()
         self.setup_building()
         self.setup_ui()
+        invoke(crossfade_sky, day=self.background, night=self.night_background, delay=15)
 
         # Игровые параметры
         self.current_game_level = 1
@@ -221,16 +230,31 @@ class WindowCleanerGame:
         camera.fov = 12
 
         # Фон неба
-        if DEBUG_MODE:
-            skyline_texture = str(pathlib.Path('temp', 'city17_skyline.jpg'))
+        skyline_texture = str(pathlib.Path('assets', 'textures', 'background_panelki_RGB.png'))
+        night_skyline_texture = str(pathlib.Path('assets', 'textures', 'background_panelki.png'))
         self.background = Entity(
             model="quad",
-            scale=(25, 20),
+            scale=(24, 14),
             color=color.light_gray,
             texture=skyline_texture,
-            z=15,
-            y=10
+            # texture_scale=(1.8, 1.8),
+            visible=0.3,
+            z=150,
+            y=-.5,
+            parent=camera
         )
+        self.night_background = Entity(
+            model="quad",
+            scale=(24, 14),
+            color=color.light_gray,
+            texture=night_skyline_texture,
+            # texture_scale=(1.8, 1.8),
+            visible=.3,
+            z=150,
+            y=-.5,
+            parent=camera
+        )
+        self.night_background.alpha = 0
 
         # Освещение
         # https://docs.panda3d.org/1.10/python/programming/render-attributes/lighting
