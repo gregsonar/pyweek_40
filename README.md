@@ -1,9 +1,9 @@
-# PyWeek 40 by Knotty Kaa
+# [PyWeek 40] The Window Washing Game by Knotty Kaa
 
 [Knotty Kaa entry](https://pyweek.org/e/KnottyKaa40/)
 
 
-### Установка зависимостей:
+### Install requirements:
 
 ```commandline
 python -m venv .venv
@@ -11,11 +11,14 @@ python -m venv .venv
 pip install -r .\requirements.txt
 ```
 
-### Запуск
+### Launch:
 
 ```commandline
 python game.py
 ```
+
+or `python run_game.py` to keep a consistent way of launching all games  
+
 
 ### Also:
 
