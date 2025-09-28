@@ -68,10 +68,10 @@ def stop_all_animations_and_invokes():
                     entity.animations.clear()
 
 
-        print(f"Остановлено: {len(entities_to_destroy)} invoke/sequence, {animations_stopped} анимаций объектов")
+        # print(f"Остановлено: {len(entities_to_destroy)} invoke/sequence, {animations_stopped} анимаций объектов")
 
     except Exception as e:
-        print(f"Ошибка при остановке анимаций: {e}")
+        print(f"Animations stopping error: {e}")
 
 
 def stop_entity_animations(entity):
@@ -80,7 +80,7 @@ def stop_entity_animations(entity):
     """
     try:
         if not isinstance(entity, Entity):
-            print("Переданный объект не является Entity")
+            print("Object is not Entity")
             return
 
         if hasattr(entity, 'stop_animations'):
@@ -89,10 +89,8 @@ def stop_entity_animations(entity):
         if hasattr(entity, 'animations'):
             entity.animations.clear()
 
-        print(f"Анимации объекта {entity} остановлены")
-
     except Exception as e:
-        print(f"Ошибка при остановке анимаций объекта: {e}")
+        print(f"Obj animation stopping error: {e}")
 
 
 def clear_all_invokes():
@@ -113,10 +111,8 @@ def clear_all_invokes():
             if entity in scene.entities:
                 destroy(entity)
 
-        print(f"Очищено {len(entities_to_destroy)} invoke событий")
-
     except Exception as e:
-        print(f"Ошибка при очистке invoke: {e}")
+        print(f"invoke cleaning error: {e}")
 
 
 def clear_all_sequences():
@@ -142,10 +138,8 @@ def clear_all_sequences():
                     destroy(entity)
                 count += 1
 
-        print(f"Остановлено {count} Sequence анимаций")
-
     except Exception as e:
-        print(f"Ошибка при остановке Sequence: {e}")
+        print(f"Sequence stopping error: {e}")
 
 
 def cleanup_and_reset_camera_for_scene():
@@ -169,12 +163,11 @@ def cleanup_and_reset_camera_for_scene():
 
     # Очищаем дочерние объекты (UI элементы, освещение и т.д.)
     children_copy = list(camera.children)
-    for child in children_copy:
-        print(f"Removing camera child: {child}")
+    for element in children_copy:
         try:
-            destroy(child)
+            destroy(element)
         except Exception as e:
-            print(f"Error destroying camera child {child}: {e}")
+            print(f"Error destroying camera child {element}: {e}")
 
     # Очищаем скрипты (включая SmoothFollow)
     if hasattr(camera, 'scripts'):

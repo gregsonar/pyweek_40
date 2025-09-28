@@ -20,12 +20,10 @@ class MenuScene(BaseScene):
         def go_forward(background, animations, invoked_animations):
             animations = background.animate('z', 10, duration=5, curve=curve.in_out_quad)
             invoked_animations = invoke(go_backward, background, animations, invoked_animations, delay=5)  # вызвать возврат после завершения
-            print(f"go_forward: {animations} \n\t {invoked_animations}")
 
         def go_backward(background, animations, invoked_animations):
             animations = background.animate('z', 0, duration=3, curve=curve.in_out_quad)
             invoked_animations = invoke(go_forward, background, animations, invoked_animations, delay=3)
-            print(f"go_backward: {animations} \n\t {invoked_animations}")
 
         self.background = Entity(name='menu_background', model="quad", texture=self.skyline_texture, parent=self)
         # self.background.visible=True
@@ -94,6 +92,5 @@ class MenuScene(BaseScene):
         stop_all_animations_and_invokes()
 
         # делаем копию списка потомков — нельзя итерироваться по .children во время удаления
-        for child in list(self.children):
-            print(f"DESTROY {child}")
-            destroy(child)
+        for element in list(self.children):
+            destroy(element)

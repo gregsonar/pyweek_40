@@ -29,8 +29,6 @@ class SplashScene(BaseScene):
     def on_disable(self):
         if not self.is_initialised:
             return
-        print('''УНИЧТОЖАЕМ СЦЕНУ splash''')
         # делаем копию списка потомков — нельзя итерироваться по .children во время удаления
-        for child in list(self.children):
-            print(f"\tDESTROY {child}")
-            destroy(child)
+        for element in list(self.children):
+            destroy(element)

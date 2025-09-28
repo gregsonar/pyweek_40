@@ -36,9 +36,9 @@ class MainGameplay(BaseScene):
             # self.editor_camera = EditorCamera(enabled=False, ignore_paused=True)
 
         except ImportError as e:
-            print(f"Ошибка импорта: {e}")
+            print(f"ImportError: {e}")
         except Exception as e:
-            print(f"Ошибка создания игры: {e}")
+            print(f"Game creation error: {e}")
 
     def update(self):
         """Основной цикл обновления"""
@@ -46,13 +46,11 @@ class MainGameplay(BaseScene):
             try:
                 self.game.update()
             except Exception as e:
-                print(f"Ошибка в игровом цикле: {e}")
+                print(f"Game loop error: {e}")
 
     def on_disable(self):
-        """Отключается при деактивации сцены"""
         if not self.is_initialised:
             return
-        print("Выключаем уровень...")
 
         # Останавливаем все анимации и invoke до удаления объектов
         clear_all_invokes()
@@ -84,14 +82,14 @@ class MainGameplay(BaseScene):
 
             # Очищаем контейнеры здания и люльки
             if hasattr(self.game, 'building_container') and self.game.building_container:
-                for child in list(self.game.building_container.children):
-                    destroy(child)
+                for element in list(self.game.building_container.children):
+                    destroy(element)
                 destroy(self.game.building_container)
                 self.game.building_container = None
 
             if hasattr(self.game, 'cradle_container') and self.game.cradle_container:
-                for child in list(self.game.cradle_container.children):
-                    destroy(child)
+                for element in list(self.game.cradle_container.children):
+                    destroy(element)
                 destroy(self.game.cradle_container)
                 self.game.cradle_container = None
 
@@ -119,8 +117,8 @@ class MainGameplay(BaseScene):
                 camera.scripts.clear()
 
             # Удаляем дочерние объекты камеры
-            for child in list(camera.children):
-                destroy(child)
+            for element in list(camera.children):
+                destroy(element)
 
         # Очищаем ресурсы только если они существуют
         if hasattr(self, 'debug_handler') and self.debug_handler:
@@ -132,9 +130,7 @@ class MainGameplay(BaseScene):
             self.editor_camera = None
 
         # Уничтожаем дочерние объекты сцены
-        for child in list(self.children):
-            print(f"DESTROY {child}")
-            destroy(child)
+        for element in list(self.children):
+            destroy(element)
 
         cleanup_and_reset_camera_for_scene()
-        print("Уровень выключен")

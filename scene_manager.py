@@ -14,7 +14,6 @@ class SceneManager(Entity):
         self.scenes[scene.scene_id] = scene
 
     def switch(self, name, fade_duration=2):
-        print(self.scenes.keys())
         if name not in self.scenes.keys():
             print(f"[SceneManager] Scene '{name}' not found")
             return

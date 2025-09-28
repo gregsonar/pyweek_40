@@ -25,7 +25,6 @@ from spritesheet_loader import SpritesheetLoader
 
 
 def crossfade_sky(day, night):
-    print(day.alpha)
     if day.alpha >= 1:
         day.animate('alpha', 0, duration=5, curve=curve.linear)
         night.animate('alpha', 1, duration=5, curve=curve.linear)
@@ -564,8 +563,6 @@ class WindowCleanerGame:
         global PRESSED_KEYS
         current_floor_windows = self.get_current_floor_windows()
         dirty_count = len(current_floor_windows)
-        # if DEBUG_MODE:
-        #     print(f'DIRTY COUNT: {dirty_count}')
 
         if self.is_lifting:
             self.hud_text.text = f'Level {self.current_game_level} | Going up to the next floor {self.current_floor_index + 1}...'
@@ -595,7 +592,6 @@ class WindowCleanerGame:
             if res:
                 if PRESSED_KEYS:
                     if PRESSED_KEYS != res:
-                        print(res)
                         PRESSED_KEYS = res
                 else:
                     PRESSED_KEYS = res
@@ -661,14 +657,14 @@ class WindowCleanerGame:
 
         # Очищаем контейнеры
         if hasattr(self, 'building_container') and self.building_container:
-            for child in list(self.building_container.children):
-                destroy(child)
+            for element in list(self.building_container.children):
+                destroy(element)
             destroy(self.building_container)
             self.building_container = None
 
         if hasattr(self, 'cradle_container') and self.cradle_container:
-            for child in list(self.cradle_container.children):
-                destroy(child)
+            for element in list(self.cradle_container.children):
+                destroy(element)
             destroy(self.cradle_container)
             self.cradle_container = None
 
@@ -684,8 +680,6 @@ class WindowCleanerGame:
         # Очищаем ресурсы текстур
         self.textures = None
         self.texture_docs = None
-
-        print("Ресурсы игры очищены")
 
 # Entity.default_shader = lit_with_shadows_shader
 window.borderless = False
