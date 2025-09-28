@@ -1,5 +1,6 @@
 from scene_manager import SceneManager
-from ursina import scene, destroy, Entity
+from ursina import scene, destroy, Entity, Audio, camera
+from ursina.camera import Camera
 
 DEBUG_MODE = False  # Отключить перед сборкой
 PRESSED_KEYS = False
@@ -145,3 +146,61 @@ def clear_all_sequences():
 
     except Exception as e:
         print(f"Ошибка при остановке Sequence: {e}")
+
+
+def cleanup_and_reset_camera_for_scene():
+    """Очистка и сброс камеры при смене сцены"""
+    global camera
+
+    if not camera:
+        # Если камеры нет - создаем новую
+        camera = Camera()
+        camera.position = (0, 0, -20)
+        return camera
+
+    # Останавливаем все invoke связанные с камерой
+    from ursina import destroy, invoke
+    try:
+        # Останавливаем все анимации
+        if hasattr(camera, 'animate'):
+            camera.animate.kill()
+    except:
+        pass
+
+    # Очищаем дочерние объекты (UI элементы, освещение и т.д.)
+    children_copy = list(camera.children)
+    for child in children_copy:
+        print(f"Removing camera child: {child}")
+        try:
+            destroy(child)
+        except Exception as e:
+            print(f"Error destroying camera child {child}: {e}")
+
+    # Очищаем скрипты (включая SmoothFollow)
+    if hasattr(camera, 'scripts'):
+        scripts_copy = list(camera.scripts)
+        for script in scripts_copy:
+            print(f"Removing camera script: {script}")
+            try:
+                camera.remove_script(script)
+            except:
+                pass
+        camera.scripts.clear()
+
+    # Сбрасываем параметры к дефолтным для платформера
+    camera.position = (0, 0, -20)
+    camera.rotation = (0, 0, 0)
+    camera.scale = (1, 1, 1)
+    camera.orthographic = True  # Как в вашей игре
+    camera.fov = 12  # Как в вашей игре
+
+    return camera
+
+# --- Sound Effexts SFX ---
+# please read CREDITS.txt
+intro_sound = Audio('573117__silver887__8-bit-flame-or-lava.wav', autoplay=False, volume=0.7)
+button_click = Audio('264446__kickhat__open-button-1.wav', autoplay=False, volume=0.7)
+jump_sound = Audio('386615__jalastram__sfx_jump_08.wav', autoplay=False, volume=0.7)
+bad_sound = Audio('238283__modus7__8-bit-noise.wav', autoplay=False, volume=0.7)
+good_sound = Audio('238273__modus7__robots.wav', autoplay=False, volume=0.7)
+work_sound = Audio('238269__modus7__robot-4.wav', autoplay=False, volume=0.5)
