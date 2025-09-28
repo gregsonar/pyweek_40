@@ -3,6 +3,7 @@ from ursina import scene, destroy, Entity
 
 DEBUG_MODE = False  # Отключить перед сборкой
 PRESSED_KEYS = False
+SCORE_FILE_PATH = "RESULTS.txt"
 
 scene_manager = SceneManager()
 
