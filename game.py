@@ -349,14 +349,14 @@ class WindowCleanerGame:
         self.cradle_platform = Entity(
             model="cube",
             scale=(12, 0.3, 1.5),
-            color=color.orange,
+            color=color.black,
             y=-0.6,
             parent=self.cradle_container
         )
         self.cradle_left = Entity(
             model="cube",
             scale=(0.3, 2.5, 1.5),
-            color=color.orange,
+            color=color.black,
             # y=-0.6,
             x=-6,
             collider='box',
@@ -365,10 +365,22 @@ class WindowCleanerGame:
         self.cradle_right = Entity(
             model="cube",
             scale=(0.3, 2.5, 1.5),
-            color=color.orange,
+            color=color.black,
             #             y=-0.6,
             x=6,
             collider='box',
+            parent=self.cradle_container
+        )
+
+        lulka_data = self.texture_docs["frames"]['Game_Spritesheet_1 (Lulka).aseprite']['frame']
+        lulka_texture = self.textures.get_sprite(lulka_data['x'], lulka_data['y'], lulka_data['w'], lulka_data['h'])
+        self.cradle_image = Entity(
+            model="cube",
+            scale=(13, 2.5, 1.5),
+            texture=lulka_texture,
+            x=0.3,
+            z=-.5,
+            collider=None,
             parent=self.cradle_container
         )
 
