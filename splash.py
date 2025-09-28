@@ -1,6 +1,7 @@
 from ursina import Entity, Text, invoke, color, destroy
 from base_scene import BaseScene
 import pathlib
+from globals import intro_sound
 
 
 class SplashScene(BaseScene):
@@ -20,6 +21,8 @@ class SplashScene(BaseScene):
         self.splash_logo = Entity(name='KnottyKaaLogo', model="quad", parent=self)
         self.splash_logo.texture = self.logo_texture
         self.splash_logo.scale = (4,2)
+
+        intro_sound.play()
 
         invoke(self.change_scene, 'menu', delay=4)
 

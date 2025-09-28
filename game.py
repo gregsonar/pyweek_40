@@ -76,6 +76,7 @@ class WindowCleanerPlayer(Custom2dController):
 
         if key == 'space':
             self.jump()
+            jump_sound.play()
             self.newanim = 'Jump'
             self.move_locked = True
 
@@ -111,12 +112,18 @@ class WindowCleanerPlayer(Custom2dController):
             self.movepressed = 0
 
     def try_clean_window(self):
-        """Попытка помыть окно"""
-        if self.current_target_window and self.current_target_window.is_dirty:
-            # Простая проверка расстояния
-            # distance = distance_2d(self.position, self.current_target_window.position)
-            # if distance <= self.cleaning_range:
-            self.current_target_window.start_cleaning()
+        """Начинает процесс мытья окна"""
+        if self.current_target_window and self.current_target_window.is_dirty and not self.is_cleaning_in_progress:
+            self.is_cleaning_in_progress = True
+            self.cleaning_start_time = time.time()
+            self.cleaning_window = self.current_target_window
+            self.move_locked = True
+
+            # Визуальные изменения окна
+            self.current_target_window.is_cleaning = True
+            self.current_target_window.color = color.white
+            work_sound.play()
+
             return True
         return False
 
