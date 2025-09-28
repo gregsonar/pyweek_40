@@ -1,0 +1,140 @@
+{ "frames": {
+   "Game_Spritesheet_1 (Wall 1).aseprite": {
+    "frame": { "x": 0, "y": 0, "w": 128, "h": 160 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 32, "y": 0, "w": 128, "h": 160 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Kondei).aseprite": {
+    "frame": { "x": 0, "y": 160, "w": 29, "h": 31 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 1, "y": 1, "w": 29, "h": 31 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Viveska).aseprite": {
+    "frame": { "x": 0, "y": 191, "w": 64, "h": 30 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 0, "y": 1, "w": 64, "h": 30 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Lulka).aseprite": {
+    "frame": { "x": 0, "y": 221, "w": 125, "h": 33 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 20, "y": 122, "w": 125, "h": 33 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Win t1).aseprite": {
+    "frame": { "x": 0, "y": 254, "w": 32, "h": 32 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 118, "y": 23, "w": 32, "h": 32 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Glass t1).aseprite": {
+    "frame": { "x": 0, "y": 286, "w": 28, "h": 28 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 120, "y": 25, "w": 28, "h": 28 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Dirt t1).aseprite": {
+    "frame": { "x": 0, "y": 314, "w": 28, "h": 27 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 120, "y": 25, "w": 28, "h": 27 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Win t2).aseprite": {
+    "frame": { "x": 0, "y": 341, "w": 32, "h": 48 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 116, "y": 95, "w": 32, "h": 48 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Glass t2).aseprite": {
+    "frame": { "x": 0, "y": 389, "w": 28, "h": 44 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 118, "y": 97, "w": 28, "h": 44 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Dirt t2).aseprite": {
+    "frame": { "x": 0, "y": 433, "w": 28, "h": 44 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 118, "y": 97, "w": 28, "h": 44 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Win t3).aseprite": {
+    "frame": { "x": 0, "y": 477, "w": 48, "h": 48 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 43, "y": 13, "w": 48, "h": 48 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Glass t3).aseprite": {
+    "frame": { "x": 0, "y": 525, "w": 44, "h": 44 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 45, "y": 15, "w": 44, "h": 44 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   },
+   "Game_Spritesheet_1 (Dirt t3).aseprite": {
+    "frame": { "x": 0, "y": 569, "w": 44, "h": 44 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 45, "y": 15, "w": 44, "h": 44 },
+    "sourceSize": { "w": 160, "h": 160 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3.15.3-x64",
+  "image": "Game_Spritesheet_1.png",
+  "format": "RGBA8888",
+  "size": { "w": 128, "h": 613 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Walls" },
+   { "name": "Wall 1", "group": "Walls", "opacity": 255, "blendMode": "normal" },
+   { "name": "Misc" },
+   { "name": "Kondei", "group": "Misc", "opacity": 255, "blendMode": "normal" },
+   { "name": "Viveska", "group": "Misc", "opacity": 255, "blendMode": "normal" },
+   { "name": "Cradle" },
+   { "name": "Lulka", "group": "Cradle", "opacity": 255, "blendMode": "normal" },
+   { "name": "Win t1" },
+   { "name": "Win t1", "group": "Win t1", "opacity": 255, "blendMode": "normal" },
+   { "name": "Glass t1", "group": "Win t1", "opacity": 255, "blendMode": "normal" },
+   { "name": "Dirt t1", "group": "Win t1", "opacity": 255, "blendMode": "normal" },
+   { "name": "Win t2" },
+   { "name": "Win t2", "group": "Win t2", "opacity": 255, "blendMode": "normal" },
+   { "name": "Glass t2", "group": "Win t2", "opacity": 255, "blendMode": "normal" },
+   { "name": "Dirt t2", "group": "Win t2", "opacity": 255, "blendMode": "normal" },
+   { "name": "Win t3" },
+   { "name": "Win t3", "group": "Win t3", "opacity": 255, "blendMode": "normal" },
+   { "name": "Glass t3", "group": "Win t3", "opacity": 255, "blendMode": "normal" },
+   { "name": "Dirt t3", "group": "Win t3", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

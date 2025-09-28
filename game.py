@@ -153,7 +153,7 @@ class Window(Entity):
     """Простое окно для мытья"""
     def __init__(self, floor_index, window_index, parent, **kwargs):
         # спрайт окна
-        windows = ['Test_Spritesheet_1 (Glass t1).aseprite', 'Test_Spritesheet_1 (Glass t2).aseprite', 'Test_Spritesheet_1 (Glass t3).aseprite']
+        windows = ['Game_Spritesheet_1 (Glass t1).aseprite', 'Game_Spritesheet_1 (Glass t2).aseprite', 'Game_Spritesheet_1 (Glass t3).aseprite']
         current_variant = random.choice(windows)
         windows_sprites_data = parent.texture_docs["frames"][current_variant]['frame']
         windows_texture = parent.textures.get_sprite(windows_sprites_data['x'], windows_sprites_data['y'],
@@ -198,7 +198,7 @@ class WindowCleanerGame:
         # загружаем спрайтшит и JSON с координатами из Aseprite
         textures_dir_path = pathlib.PurePath('assets','textures')
         # spritesheet_filename = 'Test_Scene_1_trimmed_spritesheet'
-        spritesheet_filename = 'Test_Spritesheet_1'
+        spritesheet_filename = 'Game_Spritesheet_1'
 
         self.textures = SpritesheetLoader(pathlib.PurePath(textures_dir_path, spritesheet_filename + '.png'))
         with open(pathlib.PurePath(textures_dir_path, spritesheet_filename + '.json')) as file:
@@ -381,12 +381,12 @@ class WindowCleanerGame:
         floor_y = floor_index * 4  # Каждый Floor на 4 единицы выше
 
         # Floor (стена здания)
-        wall_data = self.texture_docs["frames"]['Test_Spritesheet_1 (Wall 1).aseprite']['frame']
+        wall_data = self.texture_docs["frames"]['Game_Spritesheet_1 (Wall 1).aseprite']['frame']
         wall_texture = self.textures.get_sprite(wall_data['x'], wall_data['y'], wall_data['w'], wall_data['h']/2)
 
         misc_meta = [e['name'] for e in self.texture_docs["meta"]["layers"] if e.get("group") == "Misc"]
-        misc_objects = [self.texture_docs["frames"][f'Test_Spritesheet_1 ({name}).aseprite']['frame'] for name in misc_meta]
-        # misc_data = self.texture_docs["frames"]['Test_Spritesheet_1 (Wall 1).aseprite']['frame']
+        misc_objects = [self.texture_docs["frames"][f'Game_Spritesheet_1 ({name}).aseprite']['frame'] for name in misc_meta]
+        # misc_data = self.texture_docs["frames"]['Game_Spritesheet_1 (Wall 1).aseprite']['frame']
 
         floor_entity = Entity(
             model="quad",
