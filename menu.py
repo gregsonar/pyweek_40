@@ -1,8 +1,10 @@
-# scenes/menu.py
 from ursina import Button, Text, application, curve, Animation, window, color, Entity, invoke, destroy, camera, Sequence
+from ursina.camera import Camera
 from base_scene import BaseScene
 import pathlib
-from globals import stop_all_animations_and_invokes, clear_all_invokes
+from globals import stop_all_animations_and_invokes, clear_all_invokes, button_click, SCORE_FILE_PATH
+import os
+
 
 class MenuScene(BaseScene):
     def __init__(self):
@@ -34,6 +36,11 @@ class MenuScene(BaseScene):
 
         go_forward(self.background, self.animations, self.invoked_animations)
 
+        global camera
+        if camera and hasattr(camera, 'model'):
+            destroy(camera)
+        camera = Camera()
+
         a = Animation('ursina_wink', parent=self)
         a.position = window.bottom_right
         a.x += 6
@@ -46,10 +53,34 @@ class MenuScene(BaseScene):
         custom_font = loader.loadFont(font_path)  # noqa <- так работает
         Text.default_font = font_path
 
+        score_text = Text(x=-5.5, y=-1.2, scale=12, parent=self)
+        try:
+            if os.path.exists(SCORE_FILE_PATH):
+                with open(SCORE_FILE_PATH, "r", encoding="utf-8") as f:
+                    lines = f.read().strip().splitlines()
+                    result=lines[-1] if lines else None
+                if result:
+                    score_text.text = f"Last score: {result.split(': ')[-1]}"
+        except Exception as e:
+            print(e)
+
+        howto_text = Text("How to play: You need to wash all the windows in this skyscraper before time runs out.\n"
+                          "To wash a window, press and hold [E] while standing next to the window.\n"
+                          "When the timer expires or all windows on the floor have been washed,\n"
+                          "the cradle will move to the next floor. GLHF!", x=-5.5, y=-2, scale=10, parent=self)
+
+        credits_text = Text("Knotty Kaa, 2025 (Dudnikov, rikovmike, Juna_Gala, ObiXoD)",
+                            x=-5.5, y=-3.5, scale=10, parent=self)
+
+        camera.fov=12
+        hidden_text = Text("Well... Camera is somehow broken, I know. Sorry :) (And you've probably noticed that it's always Level 1 here, right?)",
+                            x=-5.5, y=4.5, scale=14, parent=self)
+
         start_button = (Button(text='Play!', x=-3, y=2, z=-1,
                                highlight_scale=1.05, highlight_color=color.rgb32(191, 176, 155),
                                on_click=lambda: self.change_scene('level'), parent=self))
         start_button.font = custom_font
+        start_button.pressed_sound = button_click
         start_button.fit_to_text(padding=(5,1))
 
         exit_button = Button(text='Quit', x=-3, y=0, z=-1,
@@ -59,24 +90,6 @@ class MenuScene(BaseScene):
         exit_button.fit_to_text(padding=(5, 1))
 
     def on_disable(self):
-        # if not self.is_initialised:
-        #     return
-        # for animation in Sequence.sequences:
-        #     animation.kill()
-        # print(f"on_disable anims: {self.animations} \n\t {self.invoked_animations}")
-        # print('''УНИЧТОЖАЕМ СЦЕНУ menu''')
-        # if 'invoked_animations' in self.__dir__():
-        #     if self.invoked_animations:
-        #         for anim in self.invoked_animations:
-        #             print(f'ANIMS: {anim}')
-        #             anim.cancel()
-        #
-        # if 'animations' in self.__dir__():
-        #     if self.animations:
-        #         self.animations.animate_stop()
-        #
-        # destroy(self.background)
-
         clear_all_invokes()
         stop_all_animations_and_invokes()
 
