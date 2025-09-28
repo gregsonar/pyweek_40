@@ -11,11 +11,19 @@ from custom_2d_controller import Custom2dController
 from ursina.lights import PointLight, DirectionalLight, AmbientLight
 from ursina.shaders import lit_with_shadows_shader
 
+# Инициализация Ursina
+icon_path = 'assets/knotty_kaa_32_favicon.ico'  # todo: разобраться, почему не загружает иконку
+app = Ursina(title='[PyWeek 40] The Window Washing Game by Knotty Kaa', icon=icon_path)
+
+from globals import DEBUG_MODE, PRESSED_KEYS, change_scene, scene_manager
+from scene_manager import SceneManager
+from splash import SplashScene
+from menu import MenuScene
+from level import MainGameplay
+
 from handlers.sfx_handler import Sfx_handler  # todo: импортировать music_handler из pw_38
 from spritesheet_loader import SpritesheetLoader
 
-DEBUG_MODE = True  # Отключить перед сборкой
-PRESSED_KEYS = False
 
 def crossfade_sky(day, night):
     print(day.alpha)
@@ -28,7 +36,7 @@ def crossfade_sky(day, night):
     invoke(crossfade_sky, day=day, night=night, delay=15)
 
 class WindowCleanerPlayer(Custom2dController):
-    """Расширенный контроллер для мойщика окон - унаследован от заготовки 2d актора для платформеров в Урсине"""
+    """Расширенный контроллер для мойщика Windows - унаследован от заготовки 2d актора для платформеров в Урсине"""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -48,7 +56,7 @@ class WindowCleanerPlayer(Custom2dController):
         self.current_interaction_object = False
         self.ready_to_interact = True
 
-        # Для мытья окон
+        # Для мытья Windows
         self.cleaning_range = 2.0
         self.current_target_window = None
 
@@ -172,7 +180,7 @@ class Window(Entity):
     def start_cleaning(self):
         if self.is_dirty and not self.is_cleaning:
             self.is_cleaning = True
-            self.color = color.yellow
+            self.color = color.white
             invoke(self.finish_cleaning, delay=3.0)
             return True
         return False
@@ -180,7 +188,7 @@ class Window(Entity):
     def finish_cleaning(self):
         self.is_dirty = False
         self.is_cleaning = False
-        self.color = color.rgba(0.8, 0.9, 1.0, 0.9)  # Чистое окно
+        self.color = color.rgba(0.8, 0.7, 1.0, 0.9)  # Чистое окно
 
 
 class WindowCleanerGame:
@@ -208,12 +216,12 @@ class WindowCleanerGame:
         self.score = 0
         self.lift_speed = 0.8  # скорость подъема люльки
 
-        # Этажи и окна
-        self.floors = []  # Список этажей (Entity объекты)
-        self.all_windows = []  # Список всех окон
+        # Floorи и окна
+        self.floors = []  # Список Floorей (Entity объекты)
+        self.all_windows = []  # Список всех Windows
 
         # Логика движения люльки
-        self.cradle_wait_time = 30.0  # Время ожидания на этаже
+        self.cradle_wait_time = 30.0  # Время ожидания на Floorе
         self.current_wait_time = 0.0
         self.is_lifting = False
         self.current_floor_index = 0
@@ -363,15 +371,16 @@ class WindowCleanerGame:
         self.hud_text.fg = color.white
 
     def create_initial_floors(self):
-        """Создает начальные этажи"""
+        """Создает начальные Floorи"""
         for floor_index in range(12):
             self.create_floor(floor_index)
+        self.create_floor(-1, windows=False)
 
-    def create_floor(self, floor_index):
-        """Создает один этаж с окнами"""
-        floor_y = floor_index * 4  # Каждый этаж на 4 единицы выше
+    def create_floor(self, floor_index, windows=True):
+        """Создает один Floor с окнами"""
+        floor_y = floor_index * 4  # Каждый Floor на 4 единицы выше
 
-        # Этаж (стена здания)
+        # Floor (стена здания)
         wall_data = self.texture_docs["frames"]['Test_Spritesheet_1 (Wall 1).aseprite']['frame']
         wall_texture = self.textures.get_sprite(wall_data['x'], wall_data['y'], wall_data['w'], wall_data['h']/2)
 
@@ -393,7 +402,10 @@ class WindowCleanerGame:
         self.floors.append(floor_entity)
 
         # Окна на этаже
-        window_count = 3 # пока что неизменное количество окон
+        if windows:
+            window_count = 3 # пока что неизменное количество Windows
+        else:
+            window_count = 0
         for i in range(window_count):
             window_x = -5 + i * 5 + random.uniform(-1, 1)
             window = Window(
@@ -421,7 +433,7 @@ class WindowCleanerGame:
             self.all_windows.append(window)
 
     def get_current_floor_windows(self):
-        """Получает окна текущего этажа"""
+        """Получает окна текущего Floorа"""
         windows_list = [w for w in self.all_windows
          if w.floor_index == self.current_floor_index and w.is_dirty]
         return windows_list
@@ -449,18 +461,18 @@ class WindowCleanerGame:
         # return nearest_window if min_distance <= self.player.cleaning_range else None
 
     def all_current_floor_clean(self):
-        """Проверяет, все ли окна на текущем этаже чистые"""
+        """Проверяет, все ли окна на текущем Floorе чистые"""
         current_floor_windows = [w for w in self.all_windows
                                  if w.floor_index == self.current_floor_index]
         return all(not w.is_dirty for w in current_floor_windows)
 
     def move_to_next_floor(self):
-        """Переход к следующему этажу"""
+        """Переход к следующему Floorу"""
         self.current_floor_index += 1
         self.is_lifting = True
         self.current_wait_time = 0.0
 
-        # Добавляем новые этажи если нужно
+        # Добавляем новые Floorи если нужно
         if self.current_floor_index >= len(self.floors) - 3:
             for i in range(3):
                 self.create_floor(len(self.floors))
@@ -473,12 +485,12 @@ class WindowCleanerGame:
             self.building_container.y -= lift_distance
 
             # Проверяем, достигли ли нужной высоты
-            target_y = -self.current_floor_index * 4  # todo: закрепить высоту этажа
+            target_y = -self.current_floor_index * 4  # todo: закрепить высоту Floorа
             if self.building_container.y <= target_y:
                 self.building_container.y = target_y
                 self.is_lifting = False
         else:
-            # Ждем на этаже
+            # Ждем на Floorе
             if self.all_current_floor_clean():
                 # todo: add message with congratulations
                 self.move_to_next_floor()
@@ -497,13 +509,13 @@ class WindowCleanerGame:
         #     print(f'DIRTY COUNT: {dirty_count}')
 
         if self.is_lifting:
-            self.hud_text.text = f'Уровень {self.current_game_level} | Поднимаемся на этаж {self.current_floor_index + 1}...'
+            self.hud_text.text = f'Level {self.current_game_level} | Going up to the next floor {self.current_floor_index + 1}...'
         else:
             time_left = max(0, self.cradle_wait_time - self.current_wait_time)
             if self.player.current_target_window:
-                self.hud_text.text = f'Уровень {self.current_game_level} | Этаж {self.current_floor_index + 1} | Окон: {dirty_count} | Время: {time_left:.1f}с | [E] - мыть!'
+                self.hud_text.text = f'Level {self.current_game_level} | Floor {self.current_floor_index + 1} | Windows: {dirty_count} | Время: {time_left:.1f}с | [E] - wash!'
             else:
-                self.hud_text.text = f'Уровень {self.current_game_level} | Этаж {self.current_floor_index + 1} | Окон: {dirty_count} | Время: {time_left:.1f}с | Подойдите к окну'
+                self.hud_text.text = f'Level {self.current_game_level} | Floor {self.current_floor_index + 1} | Windows: {dirty_count} | Время: {time_left:.1f}с | Come to the dirty window'
 
         if DEBUG_MODE:
             self.hud_text.text += (f'\nGrounded: {self.player.grounded}, Vel.:{self.player.velocity}, current_anim: {self.player.currentanim}, new:{self.player.newanim}, Move locked: {self.player.move_locked}'
@@ -527,43 +539,19 @@ class WindowCleanerGame:
         self.update_ui() # Обновляем UI
 
 
-# === ЗАПУСК ИГРЫ ===
-
-# Инициализация Ursina
-icon_path = 'assets/knotty_kaa_32_favicon.ico'  # todo: разобраться, почему не загружает иконку
-app = Ursina(title='PyWeek 40 - Game by Knotty Kaa', icon=icon_path)
 # Entity.default_shader = lit_with_shadows_shader
 window.borderless = False
 window.fullscreen = False
 window.exit_button.visible = False
 window.fps_counter.enabled = True
-
-# Земля для физики
-ground = Entity(model='cube', z=-.1, y=-1, origin_y=.5, scale=(1000, 100, 10), collider='box',
-                ignore=True)
-ground.color = color.rgba(0.7, 0.7, 0.8, 0.0)  # земля прозрачная, чтобы видеть этажи ниже
-
-
-def main_input(key):
-    """Глобальная обработка клавиш"""
-    if key == 'tab':
-        editor_camera.enabled = not editor_camera.enabled
-    if key == 'escape':
-        quit()
-
-
-# Создание игры
-game = WindowCleanerGame()
-
-# Обработчики ввода
-debug_handler = Entity(input=main_input)
-editor_camera = EditorCamera(enabled=False, ignore_paused=True)
-
-# Основной цикл
-def update():
-    game.update()
+window.entity_counter.enabled = False
+window.collider_counter.enabled = False
+window.cog_button.disable()  # production ready, u know
 
 
 if __name__ == "__main__":
-
+    scene_manager.register(SplashScene())
+    scene_manager.register(MenuScene())
+    scene_manager.register(MainGameplay())
+    scene_manager.switch('splash')
     app.run()
